@@ -13,6 +13,7 @@ import javax.persistence.*;
 
 @Data
 @Entity // jest to klasa bazodanowa (UWAGA! NIE ZAPOMNIJ O PLIKU CFG.XML)
+@Table()
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,7 +22,7 @@ public class Student {
     // GRADE 3 4 6 9
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 //    identity - identyfikator pochodzi z bazy danych
 //    sequence - licznik identyfikatorów pochodzi z hibernate, wszystkie klasy posiadają wspólny licznik
 //    table - licznik identyfikatorów pochodzi z hibernate i posiada oddzielny dla każdej tabeli

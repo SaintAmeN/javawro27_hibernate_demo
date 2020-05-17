@@ -26,9 +26,21 @@ public class Main {
                 deleteStudent(dao, scanner);
             } else if (komenda.equalsIgnoreCase("update")) {
                 updateStudent(dao, scanner);
+            } else if (komenda.equalsIgnoreCase("byAge")) {
+                findByAge(dao, scanner);
             }
 
         } while (!komenda.equalsIgnoreCase("quit"));
+    }
+
+    private static void findByAge(StudentDao dao, Scanner scanner) {
+        System.out.println("Podaj parametry: AgeFrom, AgeTo");
+        String linia = scanner.nextLine();
+        int ageFrom = Integer.valueOf(linia.split(" ")[0]);
+        int ageTo = Integer.valueOf(linia.split(" ")[1]);
+
+        System.out.println("Znalezione rekordy: ");
+        dao.findByAgeBetween(ageFrom, ageTo).forEach(System.out::println);
     }
 
     private static void deleteStudent(StudentDao dao, Scanner scanner) {
