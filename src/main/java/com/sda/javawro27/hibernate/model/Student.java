@@ -22,6 +22,7 @@ public class Student {
     // GRADE 3 4 6 9
 
     @Id
+    // zmiana z AUTO na IDENTITY oraz usunięcie bazy danych i wygenerowanie jej ponownie
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 //    identity - identyfikator pochodzi z bazy danych
 //    sequence - licznik identyfikatorów pochodzi z hibernate, wszystkie klasy posiadają wspólny licznik

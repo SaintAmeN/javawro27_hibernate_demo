@@ -28,6 +28,8 @@ public class Main {
                 updateStudent(dao, scanner);
             } else if (komenda.equalsIgnoreCase("byAge")) {
                 findByAge(dao, scanner);
+            }else if (komenda.equalsIgnoreCase("bybeh")) {
+                findByBehaviourAndAlive(dao, scanner);
             }
 
         } while (!komenda.equalsIgnoreCase("quit"));
@@ -41,6 +43,16 @@ public class Main {
 
         System.out.println("Znalezione rekordy: ");
         dao.findByAgeBetween(ageFrom, ageTo).forEach(System.out::println);
+    }
+
+    private static void findByBehaviourAndAlive(StudentDao dao, Scanner scanner) {
+        System.out.println("Podaj parametry: Behaviour, Alive");
+        String linia = scanner.nextLine();
+        Behaviour behaviour = Behaviour.valueOf(linia.split(" ")[0]);
+        boolean alive = Boolean.parseBoolean(linia.split(" ")[1]);
+
+        System.out.println("Znalezione rekordy: ");
+        dao.findByBehaviourAndAlive(behaviour, alive).forEach(System.out::println);
     }
 
     private static void deleteStudent(StudentDao dao, Scanner scanner) {
