@@ -3,8 +3,9 @@ package com.sda.javawro27.hibernate.model;
 // ocena z zachowania
 public enum Behaviour {
     EXEMPLARY,
-    GOOD,           // 1
+    CRIMINAL,       // 1
     ACCEPTABLE,
     BAD,
-    CRIMINAL;
+    GOOD;           // 4
+
 }

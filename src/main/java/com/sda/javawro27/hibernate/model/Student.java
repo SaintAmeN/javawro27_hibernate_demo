@@ -37,6 +37,7 @@ public class Student {
 //    @Column(columnDefinition = "TINYINT default 0")
     private boolean alive; // nie isAlive
 
+    @Enumerated(value = EnumType.STRING)
     private Behaviour behaviour;
 
     // lombok jeśli wygeneruje metodę na podstawie pola isAlive, to nazywać się będzie "isIsAlive"
