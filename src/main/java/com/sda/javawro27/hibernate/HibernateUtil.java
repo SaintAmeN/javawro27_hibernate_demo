@@ -20,7 +20,7 @@ public class HibernateUtil {
             ourSessionFactory = configuration.buildSessionFactory();
         }catch (HibernateException he){
             System.err.println(he.getMessage());
-            System.exit(376); // liczba która jest kodem błędu - jeśli zobaczymy w logach błąd o tej wartości to oznacza błąd hibernate
+//            System.exit(376); // liczba która jest kodem błędu - jeśli zobaczymy w logach błąd o tej wartości to oznacza błąd hibernate
             throw he;
         }
     }
