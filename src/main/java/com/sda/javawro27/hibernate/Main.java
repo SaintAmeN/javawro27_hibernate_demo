@@ -66,10 +66,6 @@ public class Main {
     }
 
     private static void updateStudent(StudentDao dao, Scanner scanner) {
-        System.out.println("Podaj parametry: IMIE NAZWISKO WZROST WIEK ŻYWY ZACHOWANIE");
-        String linia = scanner.nextLine();
-        String[] slowa = linia.split(" ");
-
         System.out.println("Podaj parametry: Identyfikator");
         Long id = Long.valueOf(scanner.nextLine());
 
@@ -78,6 +74,10 @@ public class Main {
             Student student = studentOptional.get();            // wyciągamy studenta z Optional (Box, opakowanie)
             System.out.println("Próbujesz edytować rekord: " + student);
 
+            System.out.println("Podaj parametry: IMIE NAZWISKO WZROST WIEK ŻYWY ZACHOWANIE");
+            String linia = scanner.nextLine();
+            String[] slowa = linia.split(" ");
+
             student = Student.builder()
                     .firstName(slowa[0])
                     .lastName(slowa[1])
@@ -85,6 +85,7 @@ public class Main {
                     .age(Integer.parseInt(slowa[3]))
                     .alive(Boolean.parseBoolean(slowa[4]))
                     .id(id)
+                    .behaviour(Behaviour.valueOf(slowa[5].toUpperCase()))
                     .build();
 
             dao.saveOrUpdate(student);
