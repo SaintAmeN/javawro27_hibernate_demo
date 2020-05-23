@@ -1,6 +1,7 @@
 package com.sda.javawro27.hibernate;
 
 import com.sda.javawro27.hibernate.model.Behaviour;
+import com.sda.javawro27.hibernate.model.LastNameSearchable;
 import com.sda.javawro27.hibernate.model.Student;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -40,8 +41,8 @@ public class StudentDao {
     //###############################################################################
     //###############################################################################
 
-    public List<Student> findAll() {
-        List<Student> list = new ArrayList<>();
+    public <T extends LastNameSearchable> List<T> findByLastName(Class<T> classType, String lastName){
+        List<T> list = new ArrayList<>();
 
         SessionFactory sessionFactory = HibernateUtil.getOurSessionFactory();
         try (Session session = sessionFactory.openSession()) {
@@ -50,42 +51,11 @@ public class StudentDao {
             CriteriaBuilder cb = session.getCriteriaBuilder();
 
             // obiekt reprezentujący zapytanie
-            CriteriaQuery<Student> criteriaQuery = cb.createQuery(Student.class);
+            CriteriaQuery<T> criteriaQuery = cb.createQuery(classType);
 
             // obiekt reprezentujący tabelę bazodanową.
             // do jakiej tabeli kierujemy nasze zapytanie?
-            Root<Student> rootTable = criteriaQuery.from(Student.class);
-
-            // wykonanie zapytania
-            criteriaQuery.select(rootTable);
-
-            // specification
-            list.addAll(session.createQuery(criteriaQuery).list());
-
-            // poznanie uniwersalnego rozwiązania które działa z każdą bazą danych
-            // używanie klas których będziecie używać na JPA (Spring)
-
-        } catch (HibernateException he) {
-            he.printStackTrace();
-        }
-        return list;
-    }
-
-    public List<Student> findByLastName(String lastName) {
-        List<Student> list = new ArrayList<>();
-
-        SessionFactory sessionFactory = HibernateUtil.getOurSessionFactory();
-        try (Session session = sessionFactory.openSession()) {
-
-            // narzędzie do tworzenia zapytań i kreowania klauzuli 'where'
-            CriteriaBuilder cb = session.getCriteriaBuilder();
-
-            // obiekt reprezentujący zapytanie
-            CriteriaQuery<Student> criteriaQuery = cb.createQuery(Student.class);
-
-            // obiekt reprezentujący tabelę bazodanową.
-            // do jakiej tabeli kierujemy nasze zapytanie?
-            Root<Student> rootTable = criteriaQuery.from(Student.class);
+            Root<T> rootTable = criteriaQuery.from(classType);
 
             // wykonanie zapytania
             criteriaQuery.select(rootTable)
@@ -98,12 +68,10 @@ public class StudentDao {
             // specification
             list.addAll(session.createQuery(criteriaQuery).list());
 
-            // poznanie uniwersalnego rozwiązania które działa z każdą bazą danych
-            // używanie klas których będziecie używać na JPA (Spring)
-
         } catch (HibernateException he) {
             he.printStackTrace();
         }
+
         return list;
     }
 

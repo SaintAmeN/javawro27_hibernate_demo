@@ -13,7 +13,7 @@ import java.util.Set;
 
 @Entity
 @AllArgsConstructor
-public class Teacher {
+public class Teacher implements LastNameSearchable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

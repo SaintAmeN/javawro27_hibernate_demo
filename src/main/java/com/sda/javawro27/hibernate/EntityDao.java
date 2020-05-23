@@ -1,11 +1,15 @@
 package com.sda.javawro27.hibernate;
 
-import com.sda.javawro27.hibernate.model.Student;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class EntityDao<T> {
@@ -53,5 +57,36 @@ public class EntityDao<T> {
                 transaction.rollback();
             }
         }
+    }
+
+    public List<T> findAll(Class<T> classType) {
+        List<T> list = new ArrayList<>();
+
+        SessionFactory sessionFactory = HibernateUtil.getOurSessionFactory();
+        try (Session session = sessionFactory.openSession()) {
+
+            // narzędzie do tworzenia zapytań i kreowania klauzuli 'where'
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+
+            // obiekt reprezentujący zapytanie
+            CriteriaQuery<T> criteriaQuery = cb.createQuery(classType);
+
+            // obiekt reprezentujący tabelę bazodanową.
+            // do jakiej tabeli kierujemy nasze zapytanie?
+            Root<T> rootTable = criteriaQuery.from(classType);
+
+            // wykonanie zapytania
+            criteriaQuery.select(rootTable);
+
+            // specification
+            list.addAll(session.createQuery(criteriaQuery).list());
+
+            // poznanie uniwersalnego rozwiązania które działa z każdą bazą danych
+            // używanie klas których będziecie używać na JPA (Spring)
+
+        } catch (HibernateException he) {
+            he.printStackTrace();
+        }
+        return list;
     }
 }

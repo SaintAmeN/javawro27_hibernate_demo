@@ -22,7 +22,7 @@ import java.util.Set;
 @Builder
 //@NoArgsConstructor
 @AllArgsConstructor
-public class Student {
+public class Student implements LastNameSearchable{
     // STUDENT 1 2 5 7 8
     // GRADE 3 4 6 9
 

@@ -5,6 +5,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -45,9 +46,22 @@ public class Main {
                 connectteacher(scanner);
             } else if(komenda.equalsIgnoreCase("liststudents")){
                 liststudents(scanner); // możliwość pobrania studentów wybranego nauczyciela
+            } else if(komenda.equalsIgnoreCase("bylastname")){
+                findByLastName(scanner); // możliwość pobrania studentów wybranego nauczyciela
             }
 
         } while (!komenda.equalsIgnoreCase("quit"));
+    }
+
+    private static void findByLastName(Scanner scanner) {
+        System.out.println("Podaj parametry: nazwisko");
+        String last = scanner.nextLine();
+
+        StudentDao studentDao = new StudentDao();
+        List<Student> studentList = studentDao.findByLastName(Student.class, last);
+        List<Teacher> teacherList = studentDao.findByLastName(Teacher.class, last);
+
+//        List<Grade> gradeList = studentDao.findByLastName(Grade.class, last);
     }
 
 //    private static void liststudents(Scanner scanner) {
@@ -66,17 +80,7 @@ public class Main {
         System.out.println("Podaj parametry: Identyfikator nauczyciela");
         Long idT = Long.valueOf(scanner.nextLine());
 
-        // Teacher DAO
-        SessionFactory sessionFactory = HibernateUtil.getOurSessionFactory();
-        try (Session session = sessionFactory.openSession()) {
-
-            // istnieje prawdopodobieństwo, że rekord nie zostanie odnaleziony
-            Teacher teacher = session.get(Teacher.class, idT);
-            teacher.getStudentSet().forEach(System.out::println);
-
-        } catch (HibernateException he) {
-            he.printStackTrace();
-        }
+        new TeacherDao().findStudents(idT).forEach(System.out::println);
     }
 
     private static void connectteacher(Scanner scanner) {
@@ -222,7 +226,6 @@ public class Main {
         System.out.println("Lista studentów:");
         new StudentDao().getAll().stream().forEach(System.out::println);
     }
-
 
 
     private static void addStudents(Scanner scanner) {
