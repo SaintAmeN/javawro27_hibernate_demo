@@ -33,9 +33,44 @@ public class Main {
                 findByBehaviourAndAlive(new StudentDao(), scanner);
             } else if (komenda.equalsIgnoreCase("addgrade")) {
                 addGradeToStudent(scanner);
+            } else if (komenda.equalsIgnoreCase("delgrade")) {
+                delGrade(scanner);
+            } else if (komenda.equalsIgnoreCase("listgrades")) {
+                listStudentGrades(scanner); // wyświetl oceny konkretnego studenta
+            } else if (komenda.equalsIgnoreCase("changegrade")) {
+                // todo: zrobić później - edytować można przedmiot i wartość - zachęcam, żebyście mogli zaobserwować zachowanie @UpdateTimestamp
             }
 
         } while (!komenda.equalsIgnoreCase("quit"));
+    }
+
+    private static void listStudentGrades(Scanner scanner) {
+        EntityDao<Student> dao = new EntityDao<>();
+
+        // nie da się usunąć rekordu po id (bezpośrednio z sesji)
+        System.out.println("Podaj parametry: Identyfikator");
+        Long id = Long.valueOf(scanner.nextLine());
+
+        Optional<Student> studentOptional = dao.findById(Student.class, id);
+        if (studentOptional.isPresent()) {
+            Student student = studentOptional.get();
+
+            student.getGradeList().forEach(System.out::println);
+        }
+    }
+
+    private static void delGrade(Scanner scanner) {
+        EntityDao<Grade> dao = new EntityDao<>();
+
+        // nie da się usunąć rekordu po id (bezpośrednio z sesji)
+        System.out.println("Podaj parametry: Identyfikator");
+        Long id = Long.valueOf(scanner.nextLine());
+
+        Optional<Grade> gradeOptional = dao.findById(Grade.class, id);
+        if (gradeOptional.isPresent()) {
+            Grade grade = gradeOptional.get();
+            dao.delete(grade);
+        }
     }
 
     private static void addGradeToStudent(Scanner scanner) {
@@ -67,6 +102,8 @@ public class Main {
         }
     }
 
+
+
     private static void findByAge(StudentDao dao, Scanner scanner) {
         System.out.println("Podaj parametry: AgeFrom, AgeTo");
         String linia = scanner.nextLine();
@@ -97,7 +134,7 @@ public class Main {
         Optional<Student> studentOptional = dao.findById(Student.class, id);   // szukamy studenta
         if (studentOptional.isPresent()) {                       // jeśli uda się go odnaleźć
             Student student = studentOptional.get();            // wyciągamy studenta z Optional (Box, opakowanie)
-            new StudentDao().delete(student);                                // przekazujemy do usunięcia
+            dao.delete(student);                                // przekazujemy do usunięcia
         }
     }
 

@@ -36,4 +36,22 @@ public class EntityDao<T> {
         }
         return Optional.empty();
     }
+
+    public void delete(T entity) {
+        SessionFactory sessionFactory = HibernateUtil.getOurSessionFactory();
+        Transaction transaction = null;
+
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+
+            // instrukcja która służy do usuwania z bazy danych
+            session.delete(entity);
+
+            transaction.commit();
+        } catch (HibernateException he) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+    }
 }
