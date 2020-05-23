@@ -44,5 +44,10 @@ public class Student {
 
     // lombok jeśli wygeneruje metodę na podstawie pola isAlive, to nazywać się będzie "isIsAlive"
     // isAlive
+
+    // 1:1 (OneToOne) - osoba ma tylko jeden adres - oneToOne - lub złączyć obiekty
+    // 1:n (OneToMany) -
+    // n:1 (ManyToOne)
+    // n:n (ManyToMany)
 }
 

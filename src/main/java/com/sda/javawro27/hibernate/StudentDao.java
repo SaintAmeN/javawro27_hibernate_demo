@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Optional;
 
 // umożliwia wykonywanie operacji CRUD na modelu Student
+//           GradeDao
+//           GenericDao<>
 public class StudentDao {
 
     public void saveOrUpdate(Student student) {
