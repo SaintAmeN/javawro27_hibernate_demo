@@ -1,6 +1,7 @@
 package com.sda.javawro27.hibernate.model;
 
 import lombok.*;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.util.List;
@@ -22,7 +23,7 @@ import java.util.Set;
 @Builder
 //@NoArgsConstructor
 @AllArgsConstructor
-public class Student implements LastNameSearchable{
+public class Student implements LastNameSearchable {
     // STUDENT 1 2 5 7 8
     // GRADE 3 4 6 9
 
@@ -41,7 +42,7 @@ public class Student implements LastNameSearchable{
     private double height;
     private int age;
 
-    //    @Column(columnDefinition = "TINYINT default 0")
+    @Column(columnDefinition = "default 0")
     private boolean alive; // nie isAlive
 
     @Enumerated(value = EnumType.STRING)
@@ -56,6 +57,10 @@ public class Student implements LastNameSearchable{
     // jako niezależne powiązania
     @OneToMany(mappedBy = "studentRef", fetch = FetchType.EAGER)
     private Set<Grade> gradeList;
+
+    // Formula oznacza nam pole jako NIE-KOLUMNE i obliczenie wartości tego pola musi być zawarte w "value"
+    @Formula(value = "(select avg(grade.gradeValue) from grade where grade.studentRef_id = id)")
+    private Double average; // liczymy średnią z 0 liczb = N/A
 
     // nie może istnieć relacja EAGER z Listą więcej niż jeden raz w modelu
 

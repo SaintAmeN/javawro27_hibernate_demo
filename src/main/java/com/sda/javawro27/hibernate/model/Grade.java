@@ -3,8 +3,11 @@ package com.sda.javawro27.hibernate.model;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.time.LocalDateTime;
 
 // @Data
@@ -22,6 +25,8 @@ public class Grade {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Min(value = 1)
+    @Max(value = 6)
     private double gradeValue; // wartość 1-6
 
     // kiedy ocena została wstawiona

@@ -1,0 +1,1 @@
+SELECT *,(select avg(grade.gradeValue) from grade where grade.studentRef_id = student.id) as avg FROM javawro27_hibernate_students.student where id = 1;
