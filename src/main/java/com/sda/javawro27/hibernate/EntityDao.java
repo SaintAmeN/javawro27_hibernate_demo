@@ -6,6 +6,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
+import java.util.Optional;
+
 public class EntityDao<T> {
     public void saveOrUpdate(T entity) {
         SessionFactory sessionFactory = HibernateUtil.getOurSessionFactory();
@@ -21,5 +23,17 @@ public class EntityDao<T> {
                 transaction.rollback();
             }
         }
+    }
+
+    public Optional<T> findById(Class<T> classType, Long id) {
+        SessionFactory sessionFactory = HibernateUtil.getOurSessionFactory();
+        try (Session session = sessionFactory.openSession()) {
+
+            // istnieje prawdopodobieństwo, że rekord nie zostanie odnaleziony
+            return Optional.ofNullable(session.get(classType, id));
+        } catch (HibernateException he) {
+            he.printStackTrace();
+        }
+        return Optional.empty();
     }
 }

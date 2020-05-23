@@ -1,3 +1,4 @@
+insert into student (firstName, lastName, height, age, alive, behaviour) values ('Paweł', 'Wasz trener', 4.91, 25, false, 'CRIMINAL');
 insert into student (firstName, lastName, height, age, alive, behaviour) values ('Beverley', 'Esh', 4.06, 33, true, 'GOOD');
 insert into student (firstName, lastName, height, age, alive, behaviour) values ('Bendite', 'Demelt', 5.93, 28, true, 'GOOD');
 insert into student (firstName, lastName, height, age, alive, behaviour) values ('Annice', 'Regorz', 4.91, 25, true, 'GOOD');

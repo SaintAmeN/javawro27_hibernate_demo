@@ -1,6 +1,8 @@
 package com.sda.javawro27.hibernate;
 
 import com.sda.javawro27.hibernate.model.Behaviour;
+import com.sda.javawro27.hibernate.model.Grade;
+import com.sda.javawro27.hibernate.model.GradeSubject;
 import com.sda.javawro27.hibernate.model.Student;
 
 import java.util.Optional;
@@ -15,7 +17,7 @@ public class Main {
         String komenda;
 
         do {
-            System.out.println("Podaj komendę [add/list/delete/update/quit]");
+            System.out.println("Podaj komendę [add/list/delete/update/addgrade/quit]");
             komenda = scanner.nextLine();
 
             if (komenda.equalsIgnoreCase("add")) {
@@ -28,13 +30,42 @@ public class Main {
                 updateStudent(dao, scanner);
             } else if (komenda.equalsIgnoreCase("byAge")) {
                 findByAge(dao, scanner);
-            }else if (komenda.equalsIgnoreCase("bybeh")) {
+            } else if (komenda.equalsIgnoreCase("bybeh")) {
                 findByBehaviourAndAlive(dao, scanner);
-            }else if (komenda.equalsIgnoreCase("addgrade")) {
-                findByBehaviourAndAlive(dao, scanner);
+            } else if (komenda.equalsIgnoreCase("addgrade")) {
+                addGradeToStudent(dao, scanner);
             }
 
         } while (!komenda.equalsIgnoreCase("quit"));
+    }
+
+    private static void addGradeToStudent(StudentDao dao, Scanner scanner) {
+        EntityDao<Grade> gradeDao = new EntityDao<>();
+        EntityDao<Student> studentDao = new EntityDao<>();
+
+        System.out.println("Podaj parametry: Identyfikator");
+        Long id = Long.valueOf(scanner.nextLine());
+
+        Optional<Student> studentOptional = studentDao.findById(Student.class, id);
+        if(studentOptional.isPresent()) {
+            System.out.println("Podaj parametry: GradeValue, Subject[J_POLSKI, J_ANGIELSKI, MATEMATYKA,INFORMATYKA]");
+            String linia = scanner.nextLine();
+            double gValue = Double.valueOf(linia.split(" ")[0]);
+            GradeSubject subject = GradeSubject.valueOf(linia.split(" ")[1].toUpperCase());
+
+            // tworzymy ocenę
+            Grade grade = new Grade(gValue, subject);
+
+            // 1. stworzenie obiektu w bazie (niepowiązanego)
+            gradeDao.saveOrUpdate(grade); // zapis do bazy można pominąć
+
+            // 2. powiązanie obiektów
+            Student student = studentOptional.get();
+            grade.setStudentRef(student);
+
+            // 3. zapis obiektów
+            gradeDao.saveOrUpdate(grade);
+        }
     }
 
     private static void findByAge(StudentDao dao, Scanner scanner) {

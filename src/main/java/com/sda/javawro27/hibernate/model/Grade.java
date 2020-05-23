@@ -1,18 +1,22 @@
 package com.sda.javawro27.hibernate.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+// @Data
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
+@RequiredArgsConstructor  // konstruktor z "wymaganymi" parametrami. (jeśli nie ma pól finalnych, to mówimy o domyślnym)
+
 @Entity
-@Data
 @AllArgsConstructor
-@NoArgsConstructor
+//@NoArgsConstructor
 public class Grade {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,11 +25,11 @@ public class Grade {
     private double gradeValue; // wartość 1-6
 
     // kiedy ocena została wstawiona
-    @CreationTimestamp
+    @CreationTimestamp // on_insert = now()
     private LocalDateTime created;
 
     // aktualizowane w momencie aktualizacji wpisu w bazie
-    @UpdateTimestamp
+    @UpdateTimestamp // on_update = now()
     private LocalDateTime updated;
 
     @Enumerated(value = EnumType.STRING)
@@ -33,5 +37,12 @@ public class Grade {
 
     // - stworzy się dodatkowa kolumna z identyfikatorem studenta
     @ManyToOne
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Student studentRef;
+
+    public Grade(double gradeValue, GradeSubject subject) {
+        this.gradeValue = gradeValue;
+        this.subject = subject;
+    }
 }

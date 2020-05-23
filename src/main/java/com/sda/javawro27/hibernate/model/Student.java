@@ -1,9 +1,6 @@
 package com.sda.javawro27.hibernate.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -11,12 +8,18 @@ import java.util.List;
 //    POJO - Plain old java object
 //      - pola muszą mieć gettery i settery
 //      - pusty konstruktor
+// @Data
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
+@RequiredArgsConstructor
+
 @Entity // jest to klasa bazodanowa (UWAGA! NIE ZAPOMNIJ O PLIKU CFG.XML)
 @Table()
 @Builder
-@NoArgsConstructor
+//@NoArgsConstructor
 @AllArgsConstructor
 public class Student {
     // STUDENT 1 2 5 7 8
@@ -30,14 +33,14 @@ public class Student {
 //    table - licznik identyfikatorów pochodzi z hibernate i posiada oddzielny dla każdej tabeli
     private Long id;
 
-//    @Column(name = "first_name")
+    //    @Column(name = "first_name")
     private String firstName;
     private String lastName;
 
     private double height;
     private int age;
 
-//    @Column(columnDefinition = "TINYINT default 0")
+    //    @Column(columnDefinition = "TINYINT default 0")
     private boolean alive; // nie isAlive
 
     @Enumerated(value = EnumType.STRING)
@@ -50,7 +53,7 @@ public class Student {
     //
     // baza danych domyślnie traktuje symetryczne odwołania (ManyToOne, OneToMany)
     // jako niezależne powiązania
-    @OneToMany(mappedBy = "studentRef")
+    @OneToMany(mappedBy = "studentRef", fetch = FetchType.EAGER)
     private List<Grade> gradeList;
 
 
@@ -59,4 +62,3 @@ public class Student {
     // n:1 (ManyToOne)
     // n:n (ManyToMany)
 }
-
