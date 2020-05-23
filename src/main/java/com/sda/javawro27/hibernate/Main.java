@@ -126,6 +126,7 @@ public class Main {
 
     private static void deleteStudent(Scanner scanner) {
         EntityDao<Student> dao = new EntityDao<>();
+        EntityDao<Grade> daoG = new EntityDao<>();
 
         // nie da się usunąć rekordu po id (bezpośrednio z sesji)
         System.out.println("Podaj parametry: Identyfikator");
@@ -134,6 +135,11 @@ public class Main {
         Optional<Student> studentOptional = dao.findById(Student.class, id);   // szukamy studenta
         if (studentOptional.isPresent()) {                       // jeśli uda się go odnaleźć
             Student student = studentOptional.get();            // wyciągamy studenta z Optional (Box, opakowanie)
+
+            // usuwamy obiekty w relacji:
+            // po pierwsze - usuwamy obiekty w relacji:
+            student.getGradeList().forEach(daoG::delete);
+
             dao.delete(student);                                // przekazujemy do usunięcia
         }
     }
