@@ -30,6 +30,8 @@ public class Main {
                 findByAge(dao, scanner);
             }else if (komenda.equalsIgnoreCase("bybeh")) {
                 findByBehaviourAndAlive(dao, scanner);
+            }else if (komenda.equalsIgnoreCase("addgrade")) {
+                findByBehaviourAndAlive(dao, scanner);
             }
 
         } while (!komenda.equalsIgnoreCase("quit"));

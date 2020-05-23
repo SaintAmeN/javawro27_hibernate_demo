@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 //    POJO - Plain old java object
 //      - pola muszą mieć gettery i settery
@@ -44,6 +45,14 @@ public class Student {
 
     // lombok jeśli wygeneruje metodę na podstawie pola isAlive, to nazywać się będzie "isIsAlive"
     // isAlive
+
+    // uczeń może mieć wiele ocen.
+    //
+    // baza danych domyślnie traktuje symetryczne odwołania (ManyToOne, OneToMany)
+    // jako niezależne powiązania
+    @OneToMany(mappedBy = "studentRef")
+    private List<Grade> gradeList;
+
 
     // 1:1 (OneToOne) - osoba ma tylko jeden adres - oneToOne - lub złączyć obiekty
     // 1:n (OneToMany) -
