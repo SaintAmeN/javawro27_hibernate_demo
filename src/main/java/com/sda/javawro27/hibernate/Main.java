@@ -1,6 +1,9 @@
 package com.sda.javawro27.hibernate;
 
 import com.sda.javawro27.hibernate.model.*;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 import java.util.Optional;
 import java.util.Scanner;
@@ -41,13 +44,40 @@ public class Main {
             } else if(komenda.equalsIgnoreCase("connectteacher")){
                 connectteacher(scanner);
             } else if(komenda.equalsIgnoreCase("liststudents")){
-//                liststudents(scanner); // możliwość pobrania studentów wybranego nauczyciela
+                liststudents(scanner); // możliwość pobrania studentów wybranego nauczyciela
             }
 
         } while (!komenda.equalsIgnoreCase("quit"));
     }
 
+//    private static void liststudents(Scanner scanner) {
+//        EntityDao<Teacher> daoT = new EntityDao<>();
+//        System.out.println("Podaj parametry: Identyfikator nauczyciela");
+//        Long idT = Long.valueOf(scanner.nextLine());
+//        Optional<Teacher> teacherOptional = daoT.findById(Teacher.class, idT);
+//        if (teacherOptional.isPresent()) {
+//            Teacher teacher = teacherOptional.get();
+//
+//            teacher.getStudentSet().forEach(System.out::println); // error
+//        }
+//    }
 
+    private static void liststudents(Scanner scanner) {
+        System.out.println("Podaj parametry: Identyfikator nauczyciela");
+        Long idT = Long.valueOf(scanner.nextLine());
+
+        // Teacher DAO
+        SessionFactory sessionFactory = HibernateUtil.getOurSessionFactory();
+        try (Session session = sessionFactory.openSession()) {
+
+            // istnieje prawdopodobieństwo, że rekord nie zostanie odnaleziony
+            Teacher teacher = session.get(Teacher.class, idT);
+            teacher.getStudentSet().forEach(System.out::println);
+
+        } catch (HibernateException he) {
+            he.printStackTrace();
+        }
+    }
 
     private static void connectteacher(Scanner scanner) {
         EntityDao<Student> daoS = new EntityDao<>();
