@@ -11,7 +11,6 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         // trzeba mieć stworzoną bazę i tabelę
-        StudentDao dao = new StudentDao();
         Scanner scanner = new Scanner(System.in);
 
         String komenda;
@@ -21,25 +20,25 @@ public class Main {
             komenda = scanner.nextLine();
 
             if (komenda.equalsIgnoreCase("add")) {
-                addStudents(dao, scanner);
+                addStudents(scanner);
             } else if (komenda.equalsIgnoreCase("list")) {
-                listStudents(dao);
+                listStudents();
             } else if (komenda.equalsIgnoreCase("delete")) {
-                deleteStudent(dao, scanner);
+                deleteStudent(scanner);
             } else if (komenda.equalsIgnoreCase("update")) {
-                updateStudent(dao, scanner);
+                updateStudent(scanner);
             } else if (komenda.equalsIgnoreCase("byAge")) {
-                findByAge(dao, scanner);
+                findByAge(new StudentDao(), scanner);
             } else if (komenda.equalsIgnoreCase("bybeh")) {
-                findByBehaviourAndAlive(dao, scanner);
+                findByBehaviourAndAlive(new StudentDao(), scanner);
             } else if (komenda.equalsIgnoreCase("addgrade")) {
-                addGradeToStudent(dao, scanner);
+                addGradeToStudent(scanner);
             }
 
         } while (!komenda.equalsIgnoreCase("quit"));
     }
 
-    private static void addGradeToStudent(StudentDao dao, Scanner scanner) {
+    private static void addGradeToStudent(Scanner scanner) {
         EntityDao<Grade> gradeDao = new EntityDao<>();
         EntityDao<Student> studentDao = new EntityDao<>();
 
@@ -88,24 +87,28 @@ public class Main {
         dao.findByBehaviourAndAlive(behaviour, alive).forEach(System.out::println);
     }
 
-    private static void deleteStudent(StudentDao dao, Scanner scanner) {
+    private static void deleteStudent(Scanner scanner) {
+        EntityDao<Student> dao = new EntityDao<>();
+
         // nie da się usunąć rekordu po id (bezpośrednio z sesji)
         System.out.println("Podaj parametry: Identyfikator");
         Long id = Long.valueOf(scanner.nextLine());
 
-        Optional<Student> studentOptional = dao.findById(id);   // szukamy studenta
+        Optional<Student> studentOptional = dao.findById(Student.class, id);   // szukamy studenta
         if (studentOptional.isPresent()) {                       // jeśli uda się go odnaleźć
             Student student = studentOptional.get();            // wyciągamy studenta z Optional (Box, opakowanie)
-            dao.delete(student);                                // przekazujemy do usunięcia
+            new StudentDao().delete(student);                                // przekazujemy do usunięcia
         }
     }
 
-    private static void listStudents(StudentDao dao) {
+    private static void listStudents() {
         System.out.println("Lista studentów:");
-        dao.getAll().stream().forEach(System.out::println);
+        new StudentDao().getAll().stream().forEach(System.out::println);
     }
 
-    private static void addStudents(StudentDao dao, Scanner scanner) {
+    private static void addStudents(Scanner scanner) {
+        EntityDao<Student> dao = new EntityDao<>();
+
         System.out.println("Podaj parametry: IMIE NAZWISKO WZROST WIEK ŻYWY ZACHOWANIE");
         String linia = scanner.nextLine();
         String[] slowa = linia.split(" ");
@@ -122,11 +125,13 @@ public class Main {
         dao.saveOrUpdate(student);
     }
 
-    private static void updateStudent(StudentDao dao, Scanner scanner) {
+    private static void updateStudent(Scanner scanner) {
+        EntityDao<Student> dao = new EntityDao<>();
+
         System.out.println("Podaj parametry: Identyfikator");
         Long id = Long.valueOf(scanner.nextLine());
 
-        Optional<Student> studentOptional = dao.findById(id);   // szukamy studenta
+        Optional<Student> studentOptional = dao.findById(Student.class, id);   // szukamy studenta
         if (studentOptional.isPresent()) {                       // jeśli uda się go odnaleźć
             Student student = studentOptional.get();            // wyciągamy studenta z Optional (Box, opakowanie)
             System.out.println("Próbujesz edytować rekord: " + student);

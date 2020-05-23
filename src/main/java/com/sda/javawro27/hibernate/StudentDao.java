@@ -20,26 +20,6 @@ import java.util.Optional;
 //           GenericDao<>
 public class StudentDao {
 
-    public void saveOrUpdate(Student student) {
-        SessionFactory sessionFactory = HibernateUtil.getOurSessionFactory();
-        Transaction transaction = null;
-
-        try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
-
-            // instrukcja która służy do zapisywania w bazie
-            // jeśli encja posiada przypisany identyfikator, to hibernate wykona aktualizację obiektu
-            // jeśli encja nie posiada id, to zostanie zapisany nowy rekord w bazie danych
-            session.saveOrUpdate(student);
-
-            transaction.commit();
-        } catch (HibernateException he) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-        }
-    }
-
     public List<Student> getAll() {
         List<Student> list = new ArrayList<>();
 
@@ -53,18 +33,6 @@ public class StudentDao {
             he.printStackTrace();
         }
         return list;
-    }
-
-    public Optional<Student> findById(Long id) {
-        SessionFactory sessionFactory = HibernateUtil.getOurSessionFactory();
-        try (Session session = sessionFactory.openSession()) {
-
-            // istnieje prawdopodobieństwo, że rekord nie zostanie odnaleziony
-            return Optional.ofNullable(session.get(Student.class, id));
-        } catch (HibernateException he) {
-            he.printStackTrace();
-        }
-        return Optional.empty();
     }
 
     public void delete(Student student) {
