@@ -5,6 +5,11 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -40,13 +45,13 @@ public class Main {
                 listStudentGrades(scanner); // wyświetl oceny konkretnego studenta
             } else if (komenda.equalsIgnoreCase("changegrade")) {
                 // todo: zrobić później - edytować można przedmiot i wartość - zachęcam, żebyście mogli zaobserwować zachowanie @UpdateTimestamp
-            } else if(komenda.equalsIgnoreCase("addteacher")){
+            } else if (komenda.equalsIgnoreCase("addteacher")) {
                 addTeacher(scanner);
-            } else if(komenda.equalsIgnoreCase("connectteacher")){
+            } else if (komenda.equalsIgnoreCase("connectteacher")) {
                 connectteacher(scanner);
-            } else if(komenda.equalsIgnoreCase("liststudents")){
+            } else if (komenda.equalsIgnoreCase("liststudents")) {
                 liststudents(scanner); // możliwość pobrania studentów wybranego nauczyciela
-            } else if(komenda.equalsIgnoreCase("bylastname")){
+            } else if (komenda.equalsIgnoreCase("bylastname")) {
                 findByLastName(scanner); // możliwość pobrania studentów wybranego nauczyciela
             }
 
@@ -105,7 +110,7 @@ public class Main {
                 daoS.saveOrUpdate(student);
             }
 
-        }else{
+        } else {
             // todo: exception
             System.err.println("Brak studenta o podanym id");
         }
@@ -114,11 +119,19 @@ public class Main {
     private static void addTeacher(Scanner scanner) {
         EntityDao<Teacher> dao = new EntityDao<>();
 
-        System.out.println("Podaj parametry: IMIE NAZWISKO ");
+        System.out.println("Podaj parametry: IMIE NAZWISKO DATAUR");
         String linia = scanner.nextLine();
         String[] slowa = linia.split(" ");
 
         Teacher teacher = new Teacher(slowa[0], slowa[1]);
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        try {
+            teacher.setBirthDate(simpleDateFormat.parse(slowa[2]));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         dao.saveOrUpdate(teacher);
     }
 
@@ -159,7 +172,7 @@ public class Main {
         Long id = Long.valueOf(scanner.nextLine());
 
         Optional<Student> studentOptional = studentDao.findById(Student.class, id);
-        if(studentOptional.isPresent()) {
+        if (studentOptional.isPresent()) {
             System.out.println("Podaj parametry: GradeValue, Subject[J_POLSKI, J_ANGIELSKI, MATEMATYKA,INFORMATYKA]");
             String linia = scanner.nextLine();
             double gValue = Double.valueOf(linia.split(" ")[0]);
@@ -179,7 +192,6 @@ public class Main {
             gradeDao.saveOrUpdate(grade);
         }
     }
-
 
 
     private static void findByAge(StudentDao dao, Scanner scanner) {

@@ -25,8 +25,7 @@ public class Grade {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Min(value = 1)
-    @Max(value = 6)
+    @Column(columnDefinition = "DOUBLE CHECK (gradeValue < 6) CHECK (gradeValue > 0)")
     private double gradeValue; // wartość 1-6
 
     // kiedy ocena została wstawiona

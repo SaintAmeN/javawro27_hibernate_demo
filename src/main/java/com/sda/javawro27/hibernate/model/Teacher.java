@@ -3,6 +3,8 @@ package com.sda.javawro27.hibernate.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.Set;
 
 @Getter
@@ -20,6 +22,9 @@ public class Teacher implements LastNameSearchable{
 
     private String firstName;
     private String lastName;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date birthDate;
 
     public Teacher(String firstName, String lastName) {
         this.firstName = firstName;
