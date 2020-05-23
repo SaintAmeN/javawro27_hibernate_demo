@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 //    POJO - Plain old java object
 //      - pola muszą mieć gettery i settery
@@ -54,11 +55,17 @@ public class Student {
     // baza danych domyślnie traktuje symetryczne odwołania (ManyToOne, OneToMany)
     // jako niezależne powiązania
     @OneToMany(mappedBy = "studentRef", fetch = FetchType.EAGER)
-    private List<Grade> gradeList;
+    private Set<Grade> gradeList;
 
+    // nie może istnieć relacja EAGER z Listą więcej niż jeden raz w modelu
 
     // 1:1 (OneToOne) - osoba ma tylko jeden adres - oneToOne - lub złączyć obiekty
     // 1:n (OneToMany) -
     // n:1 (ManyToOne)
     // n:n (ManyToMany)
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<Teacher> teacherSet;
 }

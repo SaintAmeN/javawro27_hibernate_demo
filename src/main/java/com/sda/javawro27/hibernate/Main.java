@@ -1,9 +1,6 @@
 package com.sda.javawro27.hibernate;
 
-import com.sda.javawro27.hibernate.model.Behaviour;
-import com.sda.javawro27.hibernate.model.Grade;
-import com.sda.javawro27.hibernate.model.GradeSubject;
-import com.sda.javawro27.hibernate.model.Student;
+import com.sda.javawro27.hibernate.model.*;
 
 import java.util.Optional;
 import java.util.Scanner;
@@ -16,7 +13,7 @@ public class Main {
         String komenda;
 
         do {
-            System.out.println("Podaj komendę [add/list/delete/update/addgrade/quit]");
+            System.out.println("Podaj komendę [add/list/delete/update/addgrade/quit/addteacher/delteacher]");
             komenda = scanner.nextLine();
 
             if (komenda.equalsIgnoreCase("add")) {
@@ -39,9 +36,56 @@ public class Main {
                 listStudentGrades(scanner); // wyświetl oceny konkretnego studenta
             } else if (komenda.equalsIgnoreCase("changegrade")) {
                 // todo: zrobić później - edytować można przedmiot i wartość - zachęcam, żebyście mogli zaobserwować zachowanie @UpdateTimestamp
+            } else if(komenda.equalsIgnoreCase("addteacher")){
+                addTeacher(scanner);
+            } else if(komenda.equalsIgnoreCase("connectteacher")){
+                connectteacher(scanner);
+            } else if(komenda.equalsIgnoreCase("liststudents")){
+//                liststudents(scanner); // możliwość pobrania studentów wybranego nauczyciela
             }
 
         } while (!komenda.equalsIgnoreCase("quit"));
+    }
+
+
+
+    private static void connectteacher(Scanner scanner) {
+        EntityDao<Student> daoS = new EntityDao<>();
+        EntityDao<Teacher> daoT = new EntityDao<>();
+
+        System.out.println("Podaj parametry: Identyfikator studenta");
+        Long idS = Long.valueOf(scanner.nextLine());
+
+        System.out.println("Podaj parametry: Identyfikator nauczyciela");
+        Long idT = Long.valueOf(scanner.nextLine());
+
+        Optional<Student> studentOptional = daoS.findById(Student.class, idS);
+        if (studentOptional.isPresent()) {
+            Student student = studentOptional.get();                                // z bazy pobierz 1 obiekt relacji
+
+            Optional<Teacher> teacherOptional = daoT.findById(Teacher.class, idT);
+            if (teacherOptional.isPresent()) {
+                Teacher teacher = teacherOptional.get();                            // z bazy pobierz 2 obiekt relacji
+
+                student.getTeacherSet().add(teacher);
+                daoS.saveOrUpdate(student);
+            }
+
+        }else{
+            // todo: exception
+            System.err.println("Brak studenta o podanym id");
+        }
+    }
+
+    private static void addTeacher(Scanner scanner) {
+        EntityDao<Teacher> dao = new EntityDao<>();
+
+        System.out.println("Podaj parametry: IMIE NAZWISKO ");
+        String linia = scanner.nextLine();
+        String[] slowa = linia.split(" ");
+
+        Teacher teacher = new Teacher(slowa[0], slowa[1]);
+        dao.saveOrUpdate(teacher);
     }
 
     private static void listStudentGrades(Scanner scanner) {
@@ -148,6 +192,8 @@ public class Main {
         System.out.println("Lista studentów:");
         new StudentDao().getAll().stream().forEach(System.out::println);
     }
+
+
 
     private static void addStudents(Scanner scanner) {
         EntityDao<Student> dao = new EntityDao<>();
